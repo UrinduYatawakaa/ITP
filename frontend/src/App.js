@@ -15,6 +15,7 @@ import AddCategory from './components/InventoryManagement/AddCategory';
 import AllCategorys from './components/InventoryManagement/AllCategorys';
 import CategoryWise from './components/InventoryManagement/CategoryWise';
 import GenerateReports from './components/InventoryManagement/GenerateReports';
+import HomePage from './components/Homepage/Homepage';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
               <Route path="/AllCategorys" element={<AllCategorys />} /> 
               <Route path="/CategoryWise/:cat" element={<CategoryWise />} /> 
               <Route path="/GenerateReports" element={<GenerateReports />} /> 
+              <Route path="/HomePage" element={<HomePage />} /> 
             </Routes>
     </Router>
   );
