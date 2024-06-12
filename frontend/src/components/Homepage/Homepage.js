@@ -1,90 +1,61 @@
 import './styles/HomePage.css'; // Assuming you have some CSS for styling
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 import axios from "axios";
+import Header from "./HeaderClient";
 
 export default function HomePage() {
-
-    const [categories, setCategories] = useState([]);
+    const [products, setProducts] = useState([]);
     const [search, setSearch] = useState('');
 
-
     useEffect(() => {
-        getAllCategory();
+        getAllProducts();
     }, []);
 
-    function getAllCategory() {
-        axios.get(`http://localhost:8070/categorys/getAllImages`)
+    function getAllProducts() {
+        axios.get(`http://localhost:8070/products/getAllImages`)
             .then((res) => {
-                setCategories(res.data.category);
+                setProducts(res.data.products);
             }).catch((err) => {
                 console.error(err);
             });
     }
 
-
     return (
-        <div className="home-page">
-            <header className="header">
-                <h1>Welcome to Rent-A-Wear</h1>
-                <nav>
-                    <ul className="nav-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#rentals">Rentals</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </nav>
-                <form class="searchBar" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" onChange={(e) => setSearch(e.target.value)} />
-                </form>
-            </header>
+        <div className="home-page-client">
+            <Header setSearch={setSearch} />
 
-            <main className="main-content">
-                <section className="hero">
-                    <h2>Discover Fashion. Rent with Ease.</h2>
-                    <p>Explore our vast collection of clothing and rent your favorite pieces for any occasion.</p>
-                    <button className="cta-button">Browse Rentals</button>
-                </section>
+            <main className="main-content-client">
+                
 
-                <section className="features">
-                    <h3>Why Choose Rent-A-Wear?</h3>
-                    <ul className="features-list">
-                        <li>Wide Range of Styles</li>
-                        <li>Affordable Prices</li>
-                        <li>Flexible Rental Periods</li>
-                        <li>Easy Returns</li>
-                    </ul>
-                </section>
-
-                <div className="container">
-                    {categories.filter((category) => {
-                        return search.toLowerCase() == '' ? category
-                            : category.name.toLowerCase().includes(search)
-                            ;
-                    }).map((category) => (
-                        <div className="card" key={category._id}>
-                            <div className="card-image">
-                                {category.image && (
-                                    <img src={`data:image;base64,${category.image}`} alt="category" className="category-image" />
+                <div className="container-client">
+                    {products.filter((product) => {
+                        return search.toLowerCase() === '' ? product
+                            : product.name.toLowerCase().includes(search);
+                    }).map((product) => (
+                        <div className="card-client" key={product._id}>
+                            <div className="card-image-client">
+                                {product.image && (
+                                    <img src={`data:image;base64,${product.image}`} alt="product" className="product-image-client" />
                                 )}
                             </div>
-                            <div className="card-content">
-                                <h2>{category.name.toUpperCase()}</h2>                        <p>{category.description}</p>
+                            <div className="card-content-client">
+                                <h2>{product.name.toUpperCase()}</h2>
+                                <TruncatedDescription description={product.description} />
+                                <p className="price-client">Rs.{product.rentalPrice.toFixed(2)} per day</p>
                             </div>
-                            <div className="card-actions">
-                                <Link to={`/CategoryWise/${category.name}`} className="button">View Details</Link>
+                            <div className="card-actions-client">
+                            <Link to={`/SingleProductClient/${product._id}`} className="button link-button update">View</Link>
                             </div>
                         </div>
                     ))}
                 </div>
             </main>
 
-            <footer className="footer">
+            <footer className="footer-client">
                 <p>&copy; 2024 Rent-A-Wear. All rights reserved.</p>
                 <p>Follow us on:</p>
-                <ul className="social-links">
+                <ul className="social-links-client">
                     <li><a href="#facebook">Facebook</a></li>
                     <li><a href="#instagram">Instagram</a></li>
                     <li><a href="#twitter">Twitter</a></li>
@@ -94,3 +65,28 @@ export default function HomePage() {
     );
 }
 
+function TruncatedDescription({ description }) {
+    const [isTruncated, setIsTruncated] = useState(true);
+    const words = description.split(' ');
+    const shortDescription = words.slice(0, 30).join(' ');
+    const remainingDescription = words.slice(30).join(' ');
+
+    return (
+        <div>
+            <p>
+                {isTruncated ? shortDescription : description}
+                {remainingDescription && (
+                    <span>
+                        {isTruncated ? '...' : ''}
+                        <button 
+                            className="show-more-button-client" 
+                            onClick={() => setIsTruncated(!isTruncated)}
+                        >
+                            {isTruncated ? 'Show More' : 'Show Less'}
+                        </button>
+                    </span>
+                )}
+            </p>
+        </div>
+    );
+}

@@ -324,6 +324,32 @@ router.route("/check/:productName").get((req, res) => {
     });
 });
 
+//getAll with images
+router.route("/getAllImages").get(async (req, res) => {
+    try {
+        // Retrieve all products
+        const products = await Product.find();
+
+        // Check if there are no products
+        if (!products || products.length === 0) {
+            return res.status(404).json({ status: "Error", message: "No products found" });
+        }
+
+        // Convert binary image data to base64 for each product
+        const productsWithImages = products.map(product => {
+            // Check if product.image is defined
+            const imageData = product.image && product.image.data ? product.image.data.toString('base64') : null;
+            return { ...product.toJSON(), image: imageData };
+        });
+
+        // Send response with product details and image data
+        res.status(200).json({ status: "Products fetched", products: productsWithImages });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: "Error", error: err.message });
+    }
+});
+
 
 
 
