@@ -63,9 +63,8 @@ export default function SingleProductClient() {
                                     </div>
 
                                     <div className="button-container">
-                                        <Link to={`/edit/${product._id}`} className="button link-button update">Update</Link>
-                                        <Link to={`/AddDamageItems/${product._id}`} className="button link-button damage">Report Damage</Link>
-                                        <Link to={`/AddDisposeItems/${product._id}`} className="button link-button dispose">Dispose Item</Link>
+                                        <Link to={`/edit/${product._id}`} className="button link-button update">Add to Cart</Link>
+                                        <Link to={`/AddDamageItems/${product._id}`} className="button link-button damage">Buy</Link>
                                     </div>
                                 </div>
                             </div>
